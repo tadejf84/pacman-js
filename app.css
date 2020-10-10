@@ -1,0 +1,170 @@
+*,
+::before,
+::after {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+:root {
+    --border-radius: 8px;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5vh 1rem;
+    margin: 0;
+}
+
+#gameBoard {
+    display: grid;
+    background-color: black;
+    padding: 0.15rem;
+    overflow: hidden;
+    position: relative;
+}
+
+.grid-block {
+    background: transparent;
+}
+
+/* Dots & Energizers */
+.grid-block.dot,
+.grid-block.energizer {
+    position: relative;
+}
+
+.grid-block.dot::after,
+.grid-block.energizer::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+}
+
+.grid-block.dot::after {
+    height: 4px;
+    width: 4px;
+    background-color: #fff;
+}
+
+.grid-block.energizer::after {
+    height: 8px;
+    width: 8px;
+    background-color: salmon;
+}
+
+/* Walls */
+.grid-block.wall {
+    border: 1px solid blue;
+}
+
+.grid-block.wall--around {
+    border: none;
+    border-radius: 0;
+}
+
+.grid-block.wall--bottom-middle {
+    border-radius: 0;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}
+
+.grid-block.wall--bottom-left {
+    border-radius: 0 0 0 var(--border-radius);
+    border-top: none;
+    border-right: none;
+}
+
+.grid-block.wall--bottom-right {
+    border-radius: 0 0 var(--border-radius) 0;
+    border-top: none;
+    border-left: none;
+}
+
+.grid-block.wall--top-middle {
+    border-radius: 0;
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+}
+
+.grid-block.wall--top-left {
+    border-radius: var(--border-radius) 0 0 0;
+    border-bottom: none;
+    border-right: none;
+}
+
+.grid-block.wall--top-right {
+    border-radius: 0 var(--border-radius) 0 0;
+    border-bottom: none;
+    border-left: none;
+}
+
+.grid-block.wall--center-left {
+    border-bottom: none;
+    border-top: none;
+    border-right: none;
+}
+
+.grid-block.wall--center-right {
+    border-bottom: none;
+    border-top: none;
+    border-left: none;
+}
+
+.grid-block.wall--middle {
+    border-left: none;
+    border-right: none;
+}
+
+.grid-block.wall--center {
+    border-bottom: none;
+    border-top: none;
+}
+
+.grid-block.wall--bottom {
+    border-top: none;
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+}
+
+.grid-block.wall--top {
+    border-bottom: none;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.grid-block.wall--left {
+    border-right: none;
+    border-radius: var(--border-radius) 0 0 var(--border-radius);
+}
+
+.grid-block.wall--right {
+    border-left: none;
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+}
+
+/* Ghosts */
+.grid-block.ghost-holder {
+    background-image: url(media/ghost.svg);
+    background-size: contain;
+}
+
+/* Pacman */
+.grid-block .pacman {
+    z-index: 99;
+    background-image: url(media/pacman-init.png);
+    background-size: contain;
+    width: 20px;
+    height: 20px;
+}
+
+.grid-block .pacman.active {
+    background-image: url(media/pacman.gif);
+    /* transition: all 150ms ease; */
+    transform-origin: center;
+    position: absolute;
+}

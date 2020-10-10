@@ -1,0 +1,7 @@
+/**
+ * Ghosts Class
+ * 
+ */
+class Ghosts {
+
+}
