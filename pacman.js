@@ -28,7 +28,7 @@ class Pacman {
      */
     activate () {
         const pacman = document.querySelector('.pacman');
-        pacman.classList.add('active');;
+        pacman.classList.add('active');
         document.addEventListener('keydown', (e) => {
             this.movePacmanOnKeyPush(e);
         });

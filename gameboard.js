@@ -200,9 +200,6 @@ class GameBoard {
         // Draw pacman holder
         if ( GRID[row][column] === 7 ) {
             block.classList.add('pacman-holder');
-            // const div = document.createElement('div');
-            // div.classList.add('pacman');
-            // block.appendChild(div);
         }
     }
 }

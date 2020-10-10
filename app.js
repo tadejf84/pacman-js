@@ -7,6 +7,9 @@ const gameboard = new GameBoard();
 // Draw Pacman
 const pacman = new Pacman();
 
+// Draw ghost
+const ghosts = new Ghosts();
+
 // Event listeners
 document.querySelector('#start').addEventListener('click', startGame );
 
@@ -16,8 +19,16 @@ document.querySelector('#start').addEventListener('click', startGame );
  */
 function startGame() {
     pacman.activate();
+    runGame();
 }
 
+function runGame() {
+    ghosts.move();
+    window.requestAnimationFrame(runGame);
+}
+
+
+//.requestAnimationFrame(callback);
 
 // function detectCollision(el1, el2) {
 //     var x1 = el1.offsetLeft;
