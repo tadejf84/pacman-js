@@ -1,8 +1,8 @@
 const directions = [
-    'up',
-    'down',
-    'left',
-    'right'
+    'blockBelow',
+    'blockAbove',
+    'blockRight',
+    'blockLeft'
 ];
 
 /**
@@ -13,9 +13,10 @@ class Ghosts {
 
     constructor () {
         this.posX = null;
+        this.posY = null;
         this.ghost = null;
         this.offset = 0;
-        this.dir = directions[Math.floor(Math.random() * directions.length)];
+        this.dir = null;
         this.row = null;
         this.column = null;
         this.draw();
@@ -28,16 +29,25 @@ class Ghosts {
         ghostHolder.appendChild(div);
         this.ghost = document.querySelector('.ghost');
         this.posX = this.ghost.offsetLeft;
+        this.posY = this.ghost.offsetTop;
         this.row = Math.floor(this.ghost.offsetTop / 20);
         this.column = Math.floor(this.ghost.offsetLeft / 20);
+
+
+        const adjacent = Helpers.checkAdjacentBlocks(GRID, this.row, this.column);
+        const adjacentMoves = [];
+        for (const [key, value] of Object.entries(adjacent)) {
+            if( value !== 2) {
+                adjacentMoves.push(key);
+            }
+        }
+        this.dir = adjacentMoves[Math.floor(Math.random() * adjacentMoves.length)];
     }
 
     move () {
 
         if( this.offset <= 19 ) {
-            const newPos = this.posX + 1;
             this.getDirection(this.dir);
-            this.posX = newPos;
             this.offset++;
         } else {
             const adjacent = Helpers.checkAdjacentBlocks(GRID, this.row, this.column);
@@ -58,15 +68,18 @@ class Ghosts {
     }
 
     getDirection(dir) {
-        const { blockAbove, blockBelow, blockLeft, blockRight } = Helpers.checkAdjacentBlocks(GRID, this.row, this.column);
-        if ( dir === 'blockRight' ) {      
-            this.ghost.style.left = (this.ghost.offsetLeft - 1) + "px";
+        if ( dir === 'blockRight') {      
+            this.ghost.style.left = (this.posX - 1) + "px";
+            this.posX = this.posX - 1;
         } else if ( dir === 'blockBelow' ) {    // Move to top
-            this.ghost.style.top = (this.ghost.offsetTop - 1) + "px";
+            this.ghost.style.top = (this.posY - 1) + "px";
+            this.posY = this.posY - 1;
         } else if ( dir === 'blockLeft' ) {    // Move to right
-            this.ghost.style.left = (this.ghost.offsetLeft + 1) + "px";
+            this.ghost.style.left = (this.posX + 1) + "px";
+            this.posX = this.posX + 1;
         } else if ( dir === 'blockAbove') {    // Move to bottom
-            this.ghost.style.top = (this.ghost.offsetTop + 1) + "px";
+            this.ghost.style.top = (this.posY + 1) + "px";
+            this.posY = this.posY + 1;
         }
     }
 }
