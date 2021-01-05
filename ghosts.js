@@ -1,9 +1,27 @@
-// const directions = [
-//     'blockBelow',
-//     'blockAbove',
-//     'blockRight',
-//     'blockLeft'
-// ];
+
+const directions = {
+    'toBottom': {
+        'dx': 0,
+        'dy': 1,
+        'opposite': 'toTop'
+    },
+    'toTop': {
+        'dx': 0,
+        'dy': -1,
+        'opposite': 'toBottom'
+    },
+    'toRight': {
+        'dx': 1,
+        'dy': 0,
+        'opposite': 'toLeft'
+    },
+    'toLeft': {
+        'dx': -1,
+        'dy': 0,
+        'opposite': 'toRight'
+    }
+}
+
 
 /**
  * Ghosts Class
@@ -17,6 +35,8 @@ class Ghosts {
         this.ghost = null;
         this.offset = 1;
         this.dir = null;
+        this.dx = 0;
+        this.dy = 0;
         this.row = null;
         this.column = null;
         this.inLair = true;
@@ -34,90 +54,36 @@ class Ghosts {
         this.row = Math.floor(this.ghost.offsetTop / 20);
         this.column = Math.floor(this.ghost.offsetLeft / 20);
 
-        const adjacent = Helpers.checkAdjacentBlocks(GRID, this.row, this.column);
-        const adjacentMoves = [];
-        for (const [key, value] of Object.entries(adjacent)) {
-            if( value != 2) {
-                adjacentMoves.push(key);
-            }
-        }
-        this.dir = adjacentMoves[Math.floor(Math.random() * adjacentMoves.length)];
+        // Set initial direction
+        const availableDirs = Helpers.getAvailableDirections(GRID, this.row, this.column);
+        this.dir = availableDirs[Math.floor(Math.random() * availableDirs.length)];
     }
 
     move () {
-
-        // Leave lair first
-        if( this.inLair === true )
-        {
-            this.dir = 'blockRight';
-
-            if(this.offset >= 20) 
-            {
-                this.dir = 'blockAbove';
-            }
-
-            if(this.offset >= 60) {
-                this.dir = 'blockLeft';   
-                this.inLair = false;  
-                this.offset = 0;
-                return;
-            }
-            this.getDirection(this.dir);
-            this.offset++;
-            this.row = Math.floor(this.ghost.offsetTop / 20);
-            this.column = Math.floor(this.ghost.offsetLeft / 20);
-            return;
-        }
+        const oppositeDir = directions[this.dir].opposite;
+        const availableDirs = Helpers.getAvailableDirections(GRID, this.row, this.column, this.dir, oppositeDir);
         
-
-        const adjacentBlocks = Helpers.checkAdjacentBlocks(GRID, this.row, this.column);
-
-        if( this.offset === 20 && adjacentBlocks[this.dir] == 2 && GRID[this.row][this.column] !== 2 ) 
+        if( this.offset === 19 ) 
         {
-            const adjacentMoves = Helpers.getAvailableAdjacentBlocks(GRID, this.row, this.column);
-            this.dir = adjacentMoves[Math.floor(Math.random() * adjacentMoves.length)];
-            this.getDirection(this.dir);
+            this.dir = availableDirs[Math.floor(Math.random() * availableDirs.length)];
             this.offset = 0;
         }
-        else if( this.offset === 20 && adjacentBlocks[this.dir] != 2 && GRID[this.row][this.column] !== 2  )
+        else 
         {
-            const available = Helpers.getAvailableAdjacentBlocksWithoutOpposite(GRID, this.row, this.column, this.dir);
-            this.dir = available[Math.floor(Math.random() * available.length)];
-            this.offset = 0;
-        }
-        else if( this.offset < 20 && GRID[this.row][this.column] !== 2 ) 
-        {
-            this.getDirection(this.dir);
             this.offset++;
         }
 
+        this.updatePosition(directions[this.dir].dx, directions[this.dir].dy);
         this.row = Math.floor(this.ghost.offsetTop / 20);
         this.column = Math.floor(this.ghost.offsetLeft / 20);
     }
 
-    getDirection(dir) {
-        if ( dir === 'blockRight' ) 
-        {      
-            this.ghost.style.left = (this.posX + 1) + "px";
-            this.posX = this.posX + 1;
-        } 
-        // Move to top
-        else if ( dir === 'blockBelow' ) 
-        {   
-            this.ghost.style.top = (this.posY + 1) + "px";
-            this.posY = this.posY + 1;
-        } 
-        // Move to right
-        else if ( dir === 'blockLeft' ) 
-        {    
-            this.ghost.style.left = (this.posX - 1) + "px";
-            this.posX = this.posX - 1;
-        } 
-        // Move to bottom
-        else if ( dir === 'blockAbove') 
-        {
-            this.ghost.style.top = (this.posY - 1) + "px";
-            this.posY = this.posY - 1;
-        }
+    updatePosition(dx, dy) {
+        this.dx = dx;
+        this.dy = dy;
+        this.posX = this.posX + this.dx;
+        this.posY = this.posY + this.dy;
+        this.ghost.style.left = this.posX + "px";
+        this.ghost.style.top = this.posY + "px";
     }
 }

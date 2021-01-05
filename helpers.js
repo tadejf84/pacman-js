@@ -28,6 +28,15 @@ class Helpers {
     }
 
 
+    /**
+     * Get available adjacent blocks - blocks that are not walls
+     * 
+     * @param {array} grid 
+     * @param {number} row 
+     * @param {number} column 
+     * 
+     * @returns {array} available adjacent blocks
+     */
     static getAvailableAdjacentBlocks(GRID, row, column) {
         const adjacent = Helpers.checkAdjacentBlocks(GRID, row, column);
         const adjacentMoves = [];
@@ -43,41 +52,48 @@ class Helpers {
         return adjacentMoves;
     }
 
-    static getAvailableAdjacentBlocksWithoutOpposite(GRID, row, column, dir) {
-        const adjacent = Helpers.checkAdjacentBlocks(GRID, row, column);
-        let oppositeDir;
 
-        if ( dir === 'blockRight' ) 
-        {      
-            oppositeDir = 'blockLeft';
-        } 
-        // Move to top
-        else if ( dir === 'blockBelow' ) 
-        {   
-            oppositeDir = 'blockAbove';
-        } 
-        // Move to right
-        else if ( dir === 'blockLeft' ) 
-        {    
-            oppositeDir = 'blockRight';
-        } 
-        // Move to bottom
-        else if ( dir === 'blockAbove' ) 
+    /**
+     * Get available directions to move ghosts
+     * 
+     * @param {array} grid 
+     * @param {number} row 
+     * @param {number} column 
+     * @param {string} dir
+     * @param {string} oppositeDir
+     * 
+     * @returns {array} available directions
+     */
+    static getAvailableDirections(GRID, row, column, dir = null, oppositeDir = null) {
+        const adjacentBlocks = Helpers.checkAdjacentBlocks(GRID, row, column);
+
+        let adjacentMoves = [];
+
+        for (const [key, value] of Object.entries(adjacentBlocks) ) 
         {
-            oppositeDir = 'blockBelow';
-        }
-
-        delete adjacent[oppositeDir]; 
-
-        const adjacentMoves = [];
-
-        for (const [key, value] of Object.entries(adjacent) ) 
-        {
-            if( value != 2 ) 
+            if( value != 2 && key !== dir ) 
             {
-                adjacentMoves.push(key);
+                if( key === 'blockAbove' )
+                {
+                    adjacentMoves.push('toTop');
+                }
+                else if( key === 'blockBelow' )
+                {
+                    adjacentMoves.push('toBottom');                    
+                }
+                else if( key === 'blockLeft' )
+                {
+                    adjacentMoves.push('toLeft');                    
+                }
+                else if( key === 'blockRight' )
+                {
+                    adjacentMoves.push('toRight');                    
+                }
             }
         }
+        
+        // Remove opposite direction
+        adjacentMoves = adjacentMoves.filter(move => move !== oppositeDir);
 
         return adjacentMoves;
     }
