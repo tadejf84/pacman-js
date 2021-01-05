@@ -72,22 +72,20 @@ class Ghosts {
 
         const adjacentBlocks = Helpers.checkAdjacentBlocks(GRID, this.row, this.column);
 
-        console.log(adjacentBlocks[this.dir]);
-
-        if( this.offset === 20 && adjacentBlocks[this.dir] == 2 ) 
+        if( this.offset === 20 && adjacentBlocks[this.dir] == 2 && GRID[this.row][this.column] !== 2 ) 
         {
             const adjacentMoves = Helpers.getAvailableAdjacentBlocks(GRID, this.row, this.column);
             this.dir = adjacentMoves[Math.floor(Math.random() * adjacentMoves.length)];
             this.getDirection(this.dir);
             this.offset = 0;
         }
-        else if( this.offset === 20 && adjacentBlocks[this.dir] != 2 )
+        else if( this.offset === 20 && adjacentBlocks[this.dir] != 2 && GRID[this.row][this.column] !== 2  )
         {
             const available = Helpers.getAvailableAdjacentBlocksWithoutOpposite(GRID, this.row, this.column, this.dir);
             this.dir = available[Math.floor(Math.random() * available.length)];
             this.offset = 0;
         }
-        else if( this.offset < 20 ) 
+        else if( this.offset < 20 && GRID[this.row][this.column] !== 2 ) 
         {
             this.getDirection(this.dir);
             this.offset++;
