@@ -26,4 +26,59 @@ class Helpers {
 
         return { blockAbove, blockBelow, blockLeft, blockRight };
     }
+
+
+    static getAvailableAdjacentBlocks(GRID, row, column) {
+        const adjacent = Helpers.checkAdjacentBlocks(GRID, row, column);
+        const adjacentMoves = [];
+
+        for (const [key, value] of Object.entries(adjacent) ) 
+        {
+            if( value != 2 ) 
+            {
+                adjacentMoves.push(key);
+            }
+        }
+
+        return adjacentMoves;
+    }
+
+    static getAvailableAdjacentBlocksWithoutOpposite(GRID, row, column, dir) {
+        const adjacent = Helpers.checkAdjacentBlocks(GRID, row, column);
+        let oppositeDir;
+
+        if ( dir === 'blockRight' ) 
+        {      
+            oppositeDir = 'blockLeft';
+        } 
+        // Move to top
+        else if ( dir === 'blockBelow' ) 
+        {   
+            oppositeDir = 'blockAbove';
+        } 
+        // Move to right
+        else if ( dir === 'blockLeft' ) 
+        {    
+            oppositeDir = 'blockRight';
+        } 
+        // Move to bottom
+        else if ( dir === 'blockAbove' ) 
+        {
+            oppositeDir = 'blockBelow';
+        }
+
+        delete adjacent[oppositeDir]; 
+
+        const adjacentMoves = [];
+
+        for (const [key, value] of Object.entries(adjacent) ) 
+        {
+            if( value != 2 ) 
+            {
+                adjacentMoves.push(key);
+            }
+        }
+
+        return adjacentMoves;
+    }
 }
