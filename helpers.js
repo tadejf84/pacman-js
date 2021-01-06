@@ -91,8 +91,10 @@ class Helpers {
                 }
             }
         }
+
+        if(adjacentMoves.length === 1) return adjacentMoves;
         
-        // Remove opposite direction
+        // Remove opposite direction to prevent ghost from switching to opposite direction
         adjacentMoves = adjacentMoves.filter(move => move !== oppositeDir);
 
         return adjacentMoves;
